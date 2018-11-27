@@ -1,5 +1,5 @@
-var Token = artifacts.require("naiToken");
+var NAiToken = artifacts.require("./NAiToken.sol");
 
 module.exports = function(deployer) {
-    deployer.deploy(Token);
+    return deployer.deploy(NAiToken);
 };
