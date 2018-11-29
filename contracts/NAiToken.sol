@@ -20,13 +20,26 @@ contract NAiToken is ERC223Token {
     function storageOwner() public view returns(address) {
         return tokenRepository.owner();
     }
+
+    /**
+    * @dev Mints new tokens.
+    * @param _value Amount of tokens to be minted.
+    */
+    function mintTokens(uint256 _value) public onlyOwner {
+        tokenRepository.increaseSupply(_value);
+        tokenRepository.increaseBalance(msg.sender, _value);
+        emit Transfer(address(0), msg.sender, _value);
+    }
     
     /**
     * @dev Burns tokens and decreases the total supply.
     * @param _value Amount of tokens to burn.
     */
     function burnTokens(uint256 _value) public onlyOwner {
-        tokenRepository.burnTokens(_value);
+        require(_value <= tokenRepository.balances(msg.sender), "");
+
+        tokenRepository.decreaseSupply(_value);
+        tokenRepository.decreaseBalance(msg.sender, _value);
         emit Transfer(msg.sender, address(0), _value);
     }
 
@@ -43,7 +56,7 @@ contract NAiToken is ERC223Token {
     * Can only be executed after transferring the ownership of storage.
     */
     function killContract() public onlyOwner {
-        require(storageOwner() != address(this));
+        require(storageOwner() != address(this), "");
         selfdestruct(owner);
     }
 }

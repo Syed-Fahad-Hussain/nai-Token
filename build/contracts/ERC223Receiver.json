@@ -38,9 +38,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity 0.4.24;\n\n\ncontract ERC223Receiver {\n    function tokenFallback(address _sender, address _origin, uint _value, bytes _data) public returns (bool);\n}\n\n/**\n * @title ERC223 interface\n * @dev see https://github.com/ethereum/EIPs/issues/20\n */\ncontract ERC223Interface {\n    event Transfer(address indexed from, address indexed to, uint256 value);\n    event Approval(address indexed owner, address indexed spender, uint256 value);\n    \n    function name() public view returns (string);\n    function symbol() public view returns (string);\n    function decimals() public view returns (uint256);\n    function totalSupply() public view returns (uint256);\n    function balanceOf(address _who) public view returns (uint256);\n    function allowance(address _owner, address _spender) public view returns (uint256);\n    function transfer(address _to, uint256 _value) public returns (bool);\n    function transferFrom(address _from, address _to, uint256 _value) public returns (bool);\n    function transfer(address _to, uint _value, bytes _data) public returns (bool);\n    function transferFrom(address _from, address _to, uint _value, bytes _data) public returns (bool);\n    function approve(address _spender, uint256 _value) public returns (bool);\n}\n",
-  "sourcePath": "/home/syed-fahad/Desktop/Code/ERC223/nai-token/contracts/ERC223Interface.sol",
+  "sourcePath": "/media/sami/Local Disk/Workspace/Xord.one/NAi/nai-token/contracts/ERC223Interface.sol",
   "ast": {
-    "absolutePath": "/home/syed-fahad/Desktop/Code/ERC223/nai-token/contracts/ERC223Interface.sol",
+    "absolutePath": "/media/sami/Local Disk/Workspace/Xord.one/NAi/nai-token/contracts/ERC223Interface.sol",
     "exportedSymbols": {
       "ERC223Interface": [
         254
@@ -1518,7 +1518,7 @@
     "src": "0:1252:1"
   },
   "legacyAST": {
-    "absolutePath": "/home/syed-fahad/Desktop/Code/ERC223/nai-token/contracts/ERC223Interface.sol",
+    "absolutePath": "/media/sami/Local Disk/Workspace/Xord.one/NAi/nai-token/contracts/ERC223Interface.sol",
     "exportedSymbols": {
       "ERC223Interface": [
         254
@@ -3001,5 +3001,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-11-27T16:52:15.329Z"
+  "updatedAt": "2018-11-29T07:13:12.578Z"
 }

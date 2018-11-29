@@ -1,131 +1,28 @@
 const { assertRevert } = require('./assertRevert');
-const StandardToken = artifacts.require('GDXToken');
-const fs = require('fs');
-
+const StandardToken = artifacts.require('NAiToken');
 
 const BigNumber = web3.BigNumber;
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
+// Token attributes
+const totalSupply = 20000000000000
+
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('GDXToken', function ([_, owner, recipient, anotherAccount]) {
+contract('NAiToken', function ([_, owner, recipient, anotherAccount]) {
   owner = web3.eth.accounts[0]
-
-
-    fs.readFile('./importToken.csv', function read(err, data) {
-        if (err) {
-            throw err;
-        }
-        content = data;
-    });
-
-    uint[] amountCSV;
-    address[] addressCSV;
-
-    function processData(content) {
-        let record_num = 2;  // or however many elements there are in each row
-        let allTextLines = content.split(/\r\n|\n/);
-        let entries = allTextLines[0].split(',');
-
-
-       // var headings = entries.splice(0,record_num);
-        while (entries.length>0) {
-
-
-          //from entries it will read the first element
-          //which is address and on every even location it will find address
-          //amount to transfer on odd location
-            for (var j=0; j<record_num; j++) {
-              if (j == 0){
-                address_to.push(entries.shift());
-              }
-              if (j%2 == 0){
-                  addressCSV.push(entries.shift());
-              }
-              else{
-                amountCSV.push(enteries.shift());
-              }
-            }
-        }
-
-
-
-
-
-
-
-
-
-
 
   beforeEach(async function () {
     this.token = await StandardToken.new();
   });
 
-   for( let i = 0 ; i <addressCSV.length; ++i){
-
-        describe('transfer', function () {
-          //  describe('when the recipient is not the zero address', function () {
-                // const to = recipient;
-
-
-                // describe('when the sender does not have enough balance', function () {
-                //     const amount = 101;
-                //
-                //     it('reverts', async function () {
-                //         await assertRevert(this.token.transfer(to, amount, { from: owner }));
-                //     });
-                // });
-
-                describe('when the sender has enough balance', function () {
-                    const amount = amountCSV;
-                    const to = addressCSV;
-
-                    it('transfers the requested amount', async function () {
-                        await this.token.transfer(to, amount, {from: owner});
-
-                        const senderBalance = await this.token.balanceOf(owner);
-                        senderBalance.should.be.bignumber.equal(0);
-
-                        const recipientBalance = await this.token.balanceOf(to);
-                        recipientBalance.should.be.bignumber.equal(amount);
-                    });
-
-                    it('emits a transfer event', async function () {
-                        const {logs} = await this.token.transfer(to, amount, {from: owner});
-
-                        logs.length.should.eq(1);
-                        logs[0].event.should.eq('Transfer');
-                        logs[0].args.from.should.eq(owner);
-                        logs[0].args.to.should.eq(to);
-                        logs[0].args.value.should.be.bignumber.equal(amount);
-                    });
-                });
-            });
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   describe('total supply', function () {
     it('returns the total amount of tokens', async function () {
-      const totalSupply = await this.token.totalSupply();
-
-      totalSupply.should.be.bignumber.equal(100);
+      const supply = await this.token.totalSupply();
+      supply.should.be.bignumber.equal(totalSupply);
     });
   });
 
@@ -133,7 +30,6 @@ contract('GDXToken', function ([_, owner, recipient, anotherAccount]) {
     describe('when the requested account has no tokens', function () {
       it('returns zero', async function () {
         const balance = await this.token.balanceOf(anotherAccount);
-
         balance.should.be.bignumber.equal(0);
       });
     });
@@ -141,48 +37,47 @@ contract('GDXToken', function ([_, owner, recipient, anotherAccount]) {
     describe('when the requested account has some tokens', function () {
       it('returns the total amount of tokens', async function () {
         const balance = await this.token.balanceOf(owner);
-
-        balance.should.be.bignumber.equal(100);
+        balance.should.be.bignumber.equal(totalSupply);
       });
     });
   });
-  //
-  // describe('transfer', function () {
-  //   describe('when the recipient is not the zero address', function () {
-  //     const to = recipient;
-  //
-  //     describe('when the sender does not have enough balance', function () {
-  //       const amount = 101;
-  //
-  //       it('reverts', async function () {
-  //         await assertRevert(this.token.transfer(to, amount, { from: owner }));
-  //       });
-  //     });
-  //
-  //     describe('when the sender has enough balance', function () {
-  //       const amount = 100;
-  //
-  //       it('transfers the requested amount', async function () {
-  //         await this.token.transfer(to, amount, { from: owner });
-  //
-  //         const senderBalance = await this.token.balanceOf(owner);
-  //         senderBalance.should.be.bignumber.equal(0);
-  //
-  //         const recipientBalance = await this.token.balanceOf(to);
-  //         recipientBalance.should.be.bignumber.equal(amount);
-  //       });
-  //
-  //       it('emits a transfer event', async function () {
-  //         const { logs } = await this.token.transfer(to, amount, { from: owner });
-  //
-  //         logs.length.should.eq(1);
-  //         logs[0].event.should.eq('Transfer');
-  //         logs[0].args.from.should.eq(owner);
-  //         logs[0].args.to.should.eq(to);
-  //         logs[0].args.value.should.be.bignumber.equal(amount);
-  //       });
-  //     });
-  //   });
+
+  describe('transfer', function () {
+    describe('when the recipient is not the zero address', function () {
+      const to = recipient;
+
+      describe('when the sender does not have enough balance', function () {
+        const amount = totalSupply + 1;
+
+        it('reverts', async function () {
+          await assertRevert(this.token.transfer(to, amount, { from: owner }));
+        });
+      });
+
+      describe('when the sender has enough balance', function () {
+        const amount = 100;
+
+        it('transfers the requested amount', async function () {
+          await this.token.transfer(to, amount, { from: owner });
+
+          const senderBalance = await this.token.balanceOf(owner);
+          senderBalance.should.be.bignumber.equal(totalSupply - amount);
+
+          const recipientBalance = await this.token.balanceOf(to);
+          recipientBalance.should.be.bignumber.equal(amount);
+        });
+
+        it('emits a transfer event', async function () {
+          const { logs } = await this.token.transfer(to, amount, { from: owner });
+
+          logs.length.should.eq(1);
+          logs[0].event.should.eq('Transfer');
+          logs[0].args.from.should.eq(owner);
+          logs[0].args.to.should.eq(to);
+          logs[0].args.value.should.be.bignumber.equal(amount);
+        });
+      });
+    });
 
     describe('when the recipient is the zero address', function () {
       const to = ZERO_ADDRESS;
@@ -311,7 +206,7 @@ contract('GDXToken', function ([_, owner, recipient, anotherAccount]) {
             await this.token.transferFrom(owner, to, amount, { from: spender });
 
             const senderBalance = await this.token.balanceOf(owner);
-            senderBalance.should.be.bignumber.equal(0);
+            senderBalance.should.be.bignumber.equal(totalSupply - amount);
 
             const recipientBalance = await this.token.balanceOf(to);
             recipientBalance.should.be.bignumber.equal(amount);
@@ -591,6 +486,83 @@ contract('GDXToken', function ([_, owner, recipient, anotherAccount]) {
         logs[0].args.spender.should.eq(spender);
         logs[0].args.value.should.be.bignumber.equal(amount);
       });
+    });
+  });
+
+  describe('mints new tokens', function () {
+    const amount = 100;
+    it('emits a transfer event', async function () {
+      const { logs } = await this.token.mintTokens(amount, { from: owner });
+      logs[0].args.value.should.be.bignumber.equal(amount);
+
+      const supply = await this.token.totalSupply();
+      supply.should.be.bignumber.equal(totalSupply + amount);
+
+      const balance = await this.token.balanceOf(owner);
+      balance.should.be.bignumber.equal(totalSupply + amount);
+    });
+  });
+
+  describe('burn tokens', function () {
+    describe('when the owner has enough balance', function () {
+      const amount = 100;
+      it('emits a transfer event', async function () {
+        const { logs } = await this.token.burnTokens(amount, { from: owner });
+        logs[0].args.value.should.be.bignumber.equal(amount);
+
+        const supply = await this.token.totalSupply();
+        supply.should.be.bignumber.equal(totalSupply - amount);
+
+        const balance = await this.token.balanceOf(owner);
+        balance.should.be.bignumber.equal(totalSupply - amount);
+      });
+    });
+
+    describe('when the owner does has enough balance', function () {
+      const amount = totalSupply + 1;
+      it('reverts', async function () {
+        await assertRevert(this.token.burnTokens(amount, { from: owner }));
+      });
+    });
+  });
+
+  describe('pauses all functions of the token contract', function () {
+    it('emits a pause event', async function () {
+      const { logs } = await this.token.pause({ from: owner });
+      logs[0].event.should.be.eq('Pause');
+
+      await assertRevert(this.token.transfer(ZERO_ADDRESS, 10, { from: owner }));
+    });
+  });
+
+  describe('transfers ownership of storage contract', function () {
+    it('emits a transfer event', async function () {
+      let newAddress = "0x2da27deabde2d64f3db9d7302add3b431d342bc0"
+      const { logs } = await this.token.transferStorageOwnership(newAddress, { from: owner });
+      logs[0].args.newOwner.should.be.bignumber.equal(newAddress);
+
+      const newOwner = await this.token.storageOwner();
+      newOwner.should.be.eq(newAddress);
+
+      await assertRevert(this.token.burnTokens(10, { from: owner }));
+    });
+  });
+
+  describe('kills the token contract', function () {
+    describe('when the ownership has not been transferred', function () {
+      it('reverts', async function () {
+        await assertRevert(this.token.killContract({ from: owner }));
+      });
+    });
+
+    describe('after ownership has been transferred', function () {
+      it('destroys the contract', async function () {
+        let newAddress = "0x2da27deabde2d64f3db9d7302add3b431d342bc0"
+        const { logs } = await this.token.transferStorageOwnership(newAddress, { from: owner });
+        logs[0].args.newOwner.should.be.bignumber.equal(newAddress);
+
+        await this.token.killContract({ from: owner })
+      })
     });
   });
 });

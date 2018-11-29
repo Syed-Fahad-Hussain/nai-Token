@@ -78,26 +78,11 @@ contract TokenRepository is Ownable {
     }
 
     /**
-    * @dev Mints new tokens.
-    * @param _owner Address to transfer new tokens to.
-    * @param _value Amount of tokens to be minted.
+    * @dev Increases the token supply.
+    * @param _value Value to increase.
     */
-    function mintTokens(address _owner, uint256 _value) public onlyOwner {
-        require(_value > totalSupply.add(_value), "");
-        
+    function increaseSupply(uint256 _value) public onlyOwner {
         totalSupply = totalSupply.add(_value);
-        setBalances(_owner, _value);
-    }
-    
-    /**
-    * @dev Burns tokens and decreases the total supply.
-    * @param _value Amount of tokens to burn.
-    */
-    function burnTokens(uint256 _value) public onlyOwner {
-        require(_value <= balances[msg.sender]);
-
-        totalSupply = totalSupply.sub(_value);
-        balances[msg.sender] = balances[msg.sender].sub(_value);
     }
 
     /**
@@ -117,6 +102,14 @@ contract TokenRepository is Ownable {
     */
     function increaseAllowed(address _owner, address _spender, uint256 _value) public onlyOwner {
         allowed[_owner][_spender] = allowed[_owner][_spender].add(_value);
+    }
+
+    /**
+    * @dev Decreases the token supply.
+    * @param _value Value to decrease.
+    */
+    function decreaseSupply(uint256 _value) public onlyOwner {
+        totalSupply = totalSupply.sub(_value);
     }
 
     /**
