@@ -1,0 +1,23 @@
+{
+  "name": "nai-token",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://sami-abdul@bitbucket.org/xord-one/nai-token.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/xord-one/nai-token#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-bignumber": "^3.0.0"
+  }
+}
