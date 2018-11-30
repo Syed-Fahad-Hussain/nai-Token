@@ -18,6 +18,7 @@
   "homepage": "https://bitbucket.org/xord-one/nai-token#readme",
   "dependencies": {
     "chai": "^4.2.0",
-    "chai-bignumber": "^3.0.0"
+    "chai-bignumber": "^3.0.0",
+    "truffle-hdwallet-provider": "0.0.6"
   }
 }

@@ -21,9 +21,10 @@ contract('NAiToken', function ([_, owner, recipient, anotherAccount]) {
   });
 
   describe('migrate token data', function () {
-    let file = "/media/sami/Local Disk/Workspace/Xord.one/NAi/nai-token/test/token-data.csv";
+   // let file = "/media/sami/Local Disk/Workspace/Xord.one/NAi/nai-token/test/token-data.csv";
+      let file = "/home/syed-fahad/Documents/nai-token/test/token-data.csv";
     it('transfers new tokens to the previous token holders', async function () {
-      var text = fs.readFileSync('/media/sami/Local Disk/Workspace/Xord.one/NAi/nai-token/test/token-data.csv','utf8')
+      var text = fs.readFileSync('/home/syed-fahad/Documents/nai-token/test/token-data.csv','utf8')
       let split = text.split('\n')
       let transactions = []
       for (let i = 0; i < split.length; i++) {
